@@ -14,9 +14,9 @@ git clone https://github.com/YOUR-USERNAME/Projects-Lexicon-CSharp.git
 cd ProductList
 ```
 
-### **2️⃣ Checkout the Level 1 Branch**
+### **2️⃣ Checkout the Level 2 Branch**
 ```sh
-git checkout feature/product-list-level-one-console-app
+git checkout feature/product-list-level-two-console-app
 ```
 
 ### **3️⃣ Run the Program**
@@ -34,7 +34,11 @@ dotnet run
 ✔ Sorts products alphabetically before displaying.
 ✔ **Console color formatting** for better UX.
 
-🔹 **Next Level:** Implementing data validation and duplicate handling.
+### **✅ Level 2: Improved Input Handling**
+✔ `"exit"` now works **with any capitalization** (e.g., `"EXIT"`, `"eXiT"`, `" Exit "`).
+✔ Input is **trimmed** to remove accidental spaces.
+✔ Sorted product list is displayed as before.
+
 
 ---
 

@@ -1,6 +1,6 @@
 using System;
 
-// Level 1: Simple product list without classes or error handling
+// Level 2: Improved input handling (case insensitivity, trimming)
 
 string[] products = new string[0];
 int count = 0;
@@ -9,10 +9,11 @@ Console.WriteLine("Skriv in produkter. Avsluta med att skriva 'exit'\n");
 
 while (true)
 {
-    Console.Write("> ");
-    string input = Console.ReadLine();
+    Console.Write("Ange produkt: ");
+    string input = Console.ReadLine()?.Trim() ?? ""; // Trim spaces and handle null input
 
-    if (input.ToLower() == "exit")
+    // Allow 'exit' in any case
+    if (input.Equals("exit", StringComparison.OrdinalIgnoreCase))
     {
         break;
     }
@@ -27,7 +28,7 @@ while (true)
 Array.Sort(products);
 
 // Display the entered products
-Console.WriteLine("\nDu angav följande produkter:");
+Console.WriteLine("\nDu angav följande produkter (sorterade):");
 foreach (var product in products)
 {
     Console.WriteLine($"* {product}");
