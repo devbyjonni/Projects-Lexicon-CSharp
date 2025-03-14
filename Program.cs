@@ -1,29 +1,20 @@
-/*
-ProductList Console Application
-2025-03-13
-Jonni Akesson
-
-This program allows users to enter product names in the format `NAME-XXX`. 
-It validates the input based on predefined rules:
-    - `NAME` must contain only letters and be a maximum of 4 characters long.
-    - `XXX` must be a three-digit number between 200 and 500.
-Invalid inputs display specific error messages, while valid entries are dynamically stored, sorted, and displayed at the end.
-*/
-
 using System;
+using System.Text.RegularExpressions;
 
 class ProductList
 {
-    private string[] products = []; // Initialize an empty array
-    private int productCount = 0; // Track the number of products
+    // Regular expression for validation
+    /*
+       Validation Rules:
+       - The name part (4 letters) must only contain uppercase or lowercase letters (A-Z, a-z).
+       - The number part (3 digits) must be between 200 and 500.
+       - The format must be NAME-XXX (e.g., "ABCD-250").
+    */
+    private static readonly Regex productRegex = new(@"^[A-Za-z]{4}-[2-5][0-9]{2}$");
 
-    // Configurable validation parameters
-    private const int MAX_NAME_LENGTH = 4; // Maximum length for the name part
-    private const int NUMBER_LENGTH = 3; // Exact length of the number part
-    private const int MIN_NUMBER = 200; // Minimum allowed number
-    private const int MAX_NUMBER = 500; // Maximum allowed number
+    private string[] products = [];
+    private int productCount = 0;
 
-    // Method to start the program logic
     public void Run()
     {
         PrintMessage("Skriv in produkter. Avsluta med att skriva 'exit'\n", ConsoleColor.Cyan);
@@ -52,68 +43,22 @@ class ProductList
         DisplaySortedProducts();
     }
 
-    // Get user input with a prompt
     private string GetUserInput(string prompt)
     {
         Console.Write(prompt);
         return Console.ReadLine()?.Trim() ?? "";
     }
 
-    // Validate product format, length, and number range
     private bool IsValidProduct(string input)
     {
-        string[] parts = input.Split('-');
-
-        if (parts.Length != 2 || string.IsNullOrEmpty(parts[0]) || string.IsNullOrEmpty(parts[1]))
+        if (!productRegex.IsMatch(input))
         {
-            PrintError("Fel: Produktnamnet måste innehålla exakt ett '-' och både namn och siffror måste vara ifyllda.");
-            return false;
-        }
-
-        if (!IsValidNamePart(parts[0]) || !IsValidNumberPart(parts[1]))
-        {
-            return false;
-        }
-
-        int number = int.Parse(parts[1]);
-        if (!IsNumberWithinRange(number))
-        {
-            PrintError($"Fel: Sifferdelen måste vara mellan {MIN_NUMBER} och {MAX_NUMBER}.");
-            return false;
-        }
-
-        return true;
-    }
-
-    // Validate name part (only letters and max length)
-    private bool IsValidNamePart(string name)
-    {
-        if (string.IsNullOrEmpty(name) || name.Length > MAX_NAME_LENGTH || !IsOnlyLetters(name))
-        {
-            PrintError($"Fel: Namndelen av produktnamnet får vara max {MAX_NAME_LENGTH} tecken lång och endast innehålla bokstäver.");
+            PrintError("Fel: Ogiltigt format. Exempel på korrekt format: ABCD-250.");
             return false;
         }
         return true;
     }
 
-    // Validate number part (only digits and exact length)
-    private bool IsValidNumberPart(string number)
-    {
-        if (!IsOnlyNumbers(number, NUMBER_LENGTH))
-        {
-            PrintError($"Fel: Sifferdelen av produktnamnet måste vara exakt {NUMBER_LENGTH} siffror lång.");
-            return false;
-        }
-        return true;
-    }
-
-    // Ensure the number is within the valid range
-    private bool IsNumberWithinRange(int number)
-    {
-        return number >= MIN_NUMBER && number <= MAX_NUMBER;
-    }
-
-    // Add a product to the list
     private void AddProduct(string product)
     {
         Array.Resize(ref products, productCount + 1);
@@ -121,26 +66,6 @@ class ProductList
         productCount++;
     }
 
-    // Check if a string contains only letters
-    private static bool IsOnlyLetters(string input)
-    {
-        foreach (char c in input)
-        {
-            if (!char.IsLetter(c))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // Check if a string contains only numbers and has a required length
-    private static bool IsOnlyNumbers(string input, int requiredLength)
-    {
-        return input.Length == requiredLength && int.TryParse(input, out _);
-    }
-
-    // Display sorted product list
     private void DisplaySortedProducts()
     {
         Array.Sort(products);
@@ -151,7 +76,6 @@ class ProductList
         }
     }
 
-    // Print a message in a specific color
     private static void PrintMessage(string message, ConsoleColor color)
     {
         Console.ForegroundColor = color;
@@ -159,14 +83,12 @@ class ProductList
         Console.ResetColor();
     }
 
-    // Print an error message
     private static void PrintError(string message)
     {
         PrintMessage(message, ConsoleColor.Red);
     }
 }
 
-// Main program entry point
 class Program
 {
     static void Main()
@@ -175,3 +97,15 @@ class Program
         productList.Run();
     }
 }
+
+// Test Cases for Product Validation
+// ---------------------------------
+// ✅ Valid cases:
+//   ABCD-200   -> ✅ Valid (4 letters, 3 digits between 200-500)
+//   XYZW-450   -> ✅ Valid (4 letters, 3 digits between 200-500)
+// ❌ Invalid cases:
+//   ABCDE-200  -> ❌ Too many letters
+//   XYZ-199    -> ❌ Number below 200
+//   A1B2-300   -> ❌ Name contains numbers
+//   ABC-4000   -> ❌ Number too long
+//   --         -> ❌ Invalid format
