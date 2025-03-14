@@ -64,9 +64,9 @@ class ProductList
     {
         string[] parts = input.Split('-');
 
-        if (parts.Length != 2)
+        if (parts.Length != 2 || string.IsNullOrEmpty(parts[0]) || string.IsNullOrEmpty(parts[1]))
         {
-            PrintError("Fel: Produktnamnet måste innehålla ett '-' mellan namnet och siffrorna.");
+            PrintError("Fel: Produktnamnet måste innehålla exakt ett '-' och både namn och siffror måste vara ifyllda.");
             return false;
         }
 
