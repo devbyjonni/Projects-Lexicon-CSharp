@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace ProductList.Controllers
 {
-    class ProductController
+    public class ProductController
     {
         private readonly Regex productRegex;
         private string[] products;
@@ -61,7 +61,7 @@ namespace ProductList.Controllers
             return Console.ReadLine()?.Trim() ?? "";
         }
 
-        private bool IsValidProduct(string input)
+        public bool IsValidProduct(string input)
         {
             if (!productRegex.IsMatch(input))
             {
@@ -106,15 +106,3 @@ namespace ProductList.Controllers
         }
     }
 }
-
-// Test Cases for Product Validation
-// ---------------------------------
-// ✅ Valid cases:
-//   ABCD-200   -> ✅ Valid (4 letters, 3 digits between 200-500)
-//   XYZW-450   -> ✅ Valid (4 letters, 3 digits between 200-500)
-// ❌ Invalid cases:
-//   ABCDE-200  -> ❌ Too many letters
-//   XYZ-199    -> ❌ Number below 200
-//   A1B2-300   -> ❌ Name contains numbers
-//   ABC-4000   -> ❌ Number too long
-//   --         -> ❌ Invalid format
