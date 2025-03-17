@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace ProductList.Controllers
 {
-    class ProductController
+    public class ProductController
     {
         private readonly Regex productRegex;
         private string[] products;
@@ -61,7 +61,7 @@ namespace ProductList.Controllers
             return Console.ReadLine()?.Trim() ?? "";
         }
 
-        private bool IsValidProduct(string input)
+        public bool IsValidProduct(string input)
         {
             if (!productRegex.IsMatch(input))
             {
