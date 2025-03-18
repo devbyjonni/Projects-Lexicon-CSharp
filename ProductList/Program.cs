@@ -2,7 +2,7 @@ using System;
 
 using ProductList.Controllers;
 
-namespace ProductList.App
+namespace ProductList
 {
     class Program
     {
